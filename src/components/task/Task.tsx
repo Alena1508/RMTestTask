@@ -36,15 +36,17 @@ const Task = ({
 		}),
 		[],
 	);
-	const [, drop] = useDrop(
+	const [{ isOverCurrent }, drop] = useDrop(
 		() => ({
 			accept: "task",
 			drop: (item: { dragId: string }) => {
+				console.log("item", item, id);
 				handleMoveTask(item.dragId, id);
 			},
 			collect: (monitor) => ({
 				isOver: monitor.isOver(),
 				canDrop: monitor.canDrop(),
+				isOverCurrent: monitor.isOver({ shallow: true }),
 			}),
 		}),
 		[],
@@ -54,10 +56,11 @@ const Task = ({
 	};
 
 	const opacity = isDragging ? 0.5 : 1;
+	const background = isOverCurrent ? "red" : "transparent";
 	drag(drop(ref));
 
 	return (
-		<div className="task" style={{ opacity }} ref={ref}>
+		<div className="task" style={{ opacity, background }} ref={ref}>
 			<label>
 				<input type="checkbox" checked={isChecked} onChange={() => handleSelectTask(isChecked, id)} />
 				<div className="taskName">{name}</div>

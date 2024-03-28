@@ -49,9 +49,9 @@ const UserColumn = ({ id }: IUserColumn) => {
 		}),
 		[],
 	);
-	const [, drop] = useDrop(
+	const [{ isOverCurrent }, drop] = useDrop(
 		() => ({
-			accept: ["user", "task"],
+			accept: ["user", "task"], //рпролорпавивапролд
 			drop: ({ dragId, type }: IDragItem) => {
 				if (type === "user") {
 					return handleChangeUserOrder(dragId, id);
@@ -60,6 +60,7 @@ const UserColumn = ({ id }: IUserColumn) => {
 			},
 			collect: (monitor) => ({
 				isOver: monitor.isOver(),
+				isOverCurrent: monitor.isOver({ shallow: true }),
 				canDrop: monitor.canDrop(),
 			}),
 		}),
@@ -90,16 +91,15 @@ const UserColumn = ({ id }: IUserColumn) => {
 	};
 	const handleAddTaskToUserColumn = (dragId: string) => {
 		dispatch(moveTaskToUser({ dragId, userId: id }));
-		// setSelectedTasks(selectedTasks.filter((id) => id !== dragId));
 	};
 	const handleChangeUserOrder = (dragId: string, dropId: string) => {
 		dispatch(changeUserOrder({ dragId, dropId }));
 	};
 	const opacity = isDragging ? 0.5 : 1;
-
+	const background = isOverCurrent ? "green" : "transparent";
 	drag(drop(ref));
 	return (
-		<div className="userColumn" ref={ref} style={{ opacity }}>
+		<div className="userColumn" ref={ref} style={{ opacity, background }}>
 			<div className="userColumnHeader">
 				<h2>{userName}</h2>
 				<button className="userColumnBtn" onClick={handleDeleteUser}>
