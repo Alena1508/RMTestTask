@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useDispatch } from "react-redux";
 import { useDrag, useDrop } from "react-dnd";
-import { reorderTask } from "../../store/slice/taskSlice.ts";
+import { reorderTask, toggleComplete } from "../../store/slice/taskSlice.ts";
 import "./Task.scss";
 
 interface ITaskItem {
@@ -10,19 +10,10 @@ interface ITaskItem {
 	isChecked: boolean;
 	handleSelectTask: (isChecked: boolean, checkedId: string) => void;
 	handleDeleteTask: (id: string[]) => void;
-	handleToggleComplete: (isCompleted: boolean, id: string[]) => void;
 	isCompleted: boolean;
 }
 
-const Task = ({
-	name,
-	id,
-	isChecked,
-	handleSelectTask,
-	handleDeleteTask,
-	handleToggleComplete,
-	isCompleted,
-}: ITaskItem) => {
+const Task = ({ name, id, isChecked, handleSelectTask, handleDeleteTask, isCompleted }: ITaskItem) => {
 	const dispatch = useDispatch();
 	const ref = useRef<HTMLDivElement>(null);
 
@@ -40,12 +31,11 @@ const Task = ({
 		() => ({
 			accept: "task",
 			drop: (item: { dragId: string }) => {
-				console.log("item", item, id);
 				handleMoveTask(item.dragId, id);
 			},
 			collect: (monitor) => ({
 				isOver: monitor.isOver(),
-				canDrop: monitor.canDrop(),
+				canDrop: monitor.canDrop() && monitor.isOver({ shallow: true }),
 				isOverCurrent: monitor.isOver({ shallow: true }),
 			}),
 		}),
@@ -55,8 +45,16 @@ const Task = ({
 		dispatch(reorderTask({ dragId, dropId }));
 	};
 
+	const handleToggleComplete = () =>
+		dispatch(
+			toggleComplete({
+				ids: [id],
+				completed: !isCompleted,
+			}),
+		);
+
 	const opacity = isDragging ? 0.5 : 1;
-	const background = isOverCurrent ? "red" : "transparent";
+	const background = isOverCurrent ? "#d1d5db" : "transparent";
 	drag(drop(ref));
 
 	return (
@@ -70,7 +68,7 @@ const Task = ({
 					X
 				</button>
 				<label>
-					<input type="checkbox" onChange={() => handleToggleComplete(isCompleted, [id])} checked={isCompleted} />
+					<input type="checkbox" onChange={handleToggleComplete} checked={isCompleted} />
 					is completed
 				</label>
 			</div>

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useDrag, useDrop } from "react-dnd";
 
@@ -52,16 +52,20 @@ const UserColumn = ({ id }: IUserColumn) => {
 	const [{ isOverCurrent }, drop] = useDrop(
 		() => ({
 			accept: ["user", "task"], //рпролорпавивапролд
-			drop: ({ dragId, type }: IDragItem) => {
+			drop: ({ dragId, type }: IDragItem, monitor) => {
 				if (type === "user") {
 					return handleChangeUserOrder(dragId, id);
+				}
+				const didDrop = monitor.didDrop();
+				if (didDrop) {
+					return;
 				}
 				return handleAddTaskToUserColumn(dragId);
 			},
 			collect: (monitor) => ({
 				isOver: monitor.isOver(),
 				isOverCurrent: monitor.isOver({ shallow: true }),
-				canDrop: monitor.canDrop(),
+				canDrop: monitor.canDrop() && monitor.isOver({ shallow: true }),
 			}),
 		}),
 		[],
@@ -75,14 +79,17 @@ const UserColumn = ({ id }: IUserColumn) => {
 		setSelectedTasks(tasks);
 	};
 
-	const handleToggleComplete = (isCompleted: boolean, tasksIds: string[]) => {
-		const payload = {
-			ids: tasksIds,
-			completed: toggleCompletedFlag,
-		};
-		dispatch(toggleComplete(payload));
-		setToggleCompletedFlag(!isCompleted);
-	};
+	const handleToggleComplete = useCallback(
+		(isCompleted: boolean, tasksIds: string[]) => {
+			const payload = {
+				ids: tasksIds,
+				completed: toggleCompletedFlag,
+			};
+			dispatch(toggleComplete(payload));
+			setToggleCompletedFlag(!isCompleted);
+		},
+		[toggleCompletedFlag],
+	);
 	const handleDeleteTask = (tasksIds: string[]) => {
 		dispatch(deleteTask(tasksIds));
 	};
@@ -96,8 +103,9 @@ const UserColumn = ({ id }: IUserColumn) => {
 		dispatch(changeUserOrder({ dragId, dropId }));
 	};
 	const opacity = isDragging ? 0.5 : 1;
-	const background = isOverCurrent ? "green" : "transparent";
+	const background = isOverCurrent ? "#d1d5db" : "transparent";
 	drag(drop(ref));
+
 	return (
 		<div className="userColumn" ref={ref} style={{ opacity, background }}>
 			<div className="userColumnHeader">
@@ -138,7 +146,6 @@ const UserColumn = ({ id }: IUserColumn) => {
 							isChecked={selectedTasks.includes(taskItem.id)}
 							handleSelectTask={handleSelectTask}
 							handleDeleteTask={handleDeleteTask}
-							handleToggleComplete={handleToggleComplete}
 							isCompleted={taskItem.completed}
 						/>
 					))}

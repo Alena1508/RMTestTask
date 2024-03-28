@@ -1,4 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import update from "immutability-helper";
 
 export interface ITask {
 	id: string;
@@ -24,15 +25,17 @@ const taskSlice = createSlice({
 				if (dragId === task.id) {
 					return {
 						...task,
-						userId: dropTaskUserId,
+						userId: dropTaskUserId, // set assigned userId in case if reorder + reassign
 					};
 				}
 				return task;
 			});
-			const [item] = items.splice(oldIndex, 1);
-			items.splice(newIndex, 0, item);
-
-			return items;
+			return update(items, {
+				$splice: [
+					[newIndex, 1],
+					[oldIndex, 0, items[newIndex]],
+				],
+			});
 		},
 		moveTaskToUser: (state, action) => {
 			const { userId, dragId } = action.payload;
