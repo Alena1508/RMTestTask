@@ -1,6 +1,6 @@
 import { ChangeEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setSearchQuery } from "../../features/searchSlice";
+import { setSearchQuery } from "../../features/filterSlice.ts";
 import { searchSelector } from "../../features/selectors";
 
 const SearchTask = () => {

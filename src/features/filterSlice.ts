@@ -6,16 +6,29 @@ export const TasksFilters = {
 	SHOW_ACTIVE: "Active",
 };
 
+interface FilterStore {
+	filterByStatus: string;
+	searchQuery: string;
+}
+
+const initialState: FilterStore = {
+	filterByStatus: TasksFilters.SHOW_ALL,
+	searchQuery: "",
+};
+
 const filterSlice = createSlice({
 	name: "filters",
-	initialState: TasksFilters.SHOW_ALL,
+	initialState,
 	reducers: {
-		setTasksFilter(state, action) {
-			return action.payload;
+		setFilterByStatus(state: FilterStore, action) {
+			state.filterByStatus = action.payload;
+		},
+		setSearchQuery(state, action) {
+			state.searchQuery = action.payload;
 		},
 	},
 });
 
-export const { setTasksFilter } = filterSlice.actions;
+export const { setSearchQuery, setFilterByStatus } = filterSlice.actions;
 
 export default filterSlice.reducer;

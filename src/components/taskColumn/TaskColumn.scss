@@ -2,50 +2,50 @@
 @import "../../mixins";
 
 .taskColumn {
-  border: $width-input-border solid $textfld-border;
-  padding: 0 0.5em;
-  background: #ffffff;
-  gap: 0.5em;
-  cursor: grab;
-  width: auto;
-  margin: 1em 0;
-  @include lg {
-    margin: 1em 0;
-  }
+	border: $width-input-border solid $textfld-border;
+	padding: 0 0.5em;
+	background: #ffffff;
+	gap: 0.5em;
+	cursor: grab;
+	width: auto;
+	margin: 1em 0;
+	@include lg {
+		margin: 1em 0;
+	}
 
-  .taskColumnHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    
-    .taskColumnBtn {
-      background: #ffffff;
-      color: #1f2937;
-      height: 25px;
-      padding: 0 0.3em;
-    }
-  }
+	.taskColumnHeader {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
 
-  .taskColumnActions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    @include sm {
-      flex-direction: column;
-      align-items: flex-start;
-    }
+		.taskColumnBtn {
+			background: #ffffff;
+			color: #1f2937;
+			height: 25px;
+			padding: 0 0.3em;
+		}
+	}
 
-    button {
-      margin: 0.5em;
-      @include sm {
-        margin: 0.1em 0;
-        padding: 0.4em;
-        width: 160px;
-      }
-    }
-  }
+	.taskColumnActions {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		@include sm {
+			flex-direction: column;
+			align-items: flex-start;
+		}
 
-  .noResultsText {
-    text-align: center;
-  }
+		button {
+			margin: 0.5em;
+			@include sm {
+				margin: 0.1em 0;
+				padding: 0.4em;
+				width: 160px;
+			}
+		}
+	}
+
+	.noResultsText {
+		text-align: center;
+	}
 }

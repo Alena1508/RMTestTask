@@ -9,7 +9,7 @@ export const tasksSelector = (state: RootState) => state.todos;
 export const usersSelector = (state: RootState) => state.users;
 
 export const getTasksByUserId = (userId: string) =>
-	createSelector([tasksSelector, tasksFiltersSelector, searchSelector], (tasks, filter, searchQuery) => {
+	createSelector([tasksSelector, filterByStatusSelector, searchSelector], (tasks, filter, searchQuery) => {
 		return tasks.filter(
 			(task) =>
 				getTaskByUserId(task, userId) && getTaskByFilterName(task, filter) && getTaskBySearchQuery(task, searchQuery),
@@ -21,6 +21,6 @@ export const getUserNameByUserId = (userId: string) =>
 		return users.find((user) => user.id === userId)?.name;
 	});
 
-export const tasksFiltersSelector = (state: RootState) => state.filters;
+export const filterByStatusSelector = (state: RootState) => state.filters.filterByStatus || "";
 
-export const searchSelector = (state: RootState) => state.search;
+export const searchSelector = (state: RootState) => state.filters.searchQuery || "";

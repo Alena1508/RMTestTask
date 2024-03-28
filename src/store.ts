@@ -5,13 +5,11 @@ import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, 
 import todoReducer from "./features/taskSlice";
 import userReducer from "./features/userSlice";
 import filterReducer from "./features/filterSlice";
-import searchReducer from "./features/searchSlice";
 
 const reducers = combineReducers({
 	todos: todoReducer,
 	users: userReducer,
 	filters: filterReducer,
-	search: searchReducer,
 });
 
 const persistConfig = {

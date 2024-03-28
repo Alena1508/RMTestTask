@@ -1,12 +1,12 @@
 @import "../../mixins";
 
 .tasksList {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  @include md {
-    flex-direction: column;
-    width: 80%;
-    margin: 1em auto;
-  }
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	@include md {
+		flex-direction: column;
+		width: 80%;
+		margin: 1em auto;
+	}
 }

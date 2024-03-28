@@ -6,7 +6,7 @@ import { usersSelector } from "../../features/selectors";
 
 const CreateTaskForm = () => {
 	const [taskName, setTaskName] = useState<string>("");
-	const [currentUserId, setCurrentUserId] = useState<string>("unassigned");
+	const [selectedUserId, setSelectedUserId] = useState<string>("unassigned");
 	const users = useSelector(usersSelector);
 	const isDisabledBtn = taskName === "";
 
@@ -16,7 +16,7 @@ const CreateTaskForm = () => {
 		id: uuidv4(),
 		name: taskName,
 		completed: false,
-		userId: currentUserId,
+		userId: selectedUserId,
 	};
 
 	const handleTaskNameChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -24,7 +24,7 @@ const CreateTaskForm = () => {
 	};
 
 	const handleUserChange = (e: ChangeEvent<HTMLSelectElement>) => {
-		setCurrentUserId(e.target.value);
+		setSelectedUserId(e.target.value);
 	};
 
 	const handleSubmit = (e: FormEvent) => {
@@ -39,9 +39,9 @@ const CreateTaskForm = () => {
 			<h3>Create Task</h3>
 			<form onSubmit={handleSubmit}>
 				<input type="text" value={taskName} onChange={handleTaskNameChange} placeholder="Task name..." />
-				<select onChange={handleUserChange}>
+				<select onChange={handleUserChange} value={selectedUserId}>
 					{users.map((user) => (
-						<option selected={currentUserId === user.id} value={user.id} key={user.id}>
+						<option value={user.id} key={user.id}>
 							{user.name}
 						</option>
 					))}

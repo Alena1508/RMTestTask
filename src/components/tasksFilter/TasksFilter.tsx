@@ -1,12 +1,12 @@
 import { ChangeEvent } from "react";
 import { useDispatch } from "react-redux";
-import { setTasksFilter, TasksFilters } from "../../features/filterSlice";
+import { setFilterByStatus, TasksFilters } from "../../features/filterSlice.ts";
 
 const TasksFilter = () => {
 	const dispatch = useDispatch();
 
 	const handleFilterChange = (e: ChangeEvent<HTMLSelectElement>) => {
-		dispatch(setTasksFilter(e.target.value));
+		dispatch(setFilterByStatus(e.target.value));
 	};
 
 	return (
