@@ -1,5 +1,5 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { RootState } from "../store";
+import { RootState } from "./store.ts";
 import { getTaskBySearchQuery } from "../helpers/getTaskBySearchQuery";
 import { getTaskByFilterName } from "../helpers/getTaskByFilterName";
 import { getTaskByUserId } from "../helpers/getTaskByUserId";

@@ -1,7 +1,7 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useDispatch } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
-import { addUser, IUser } from "../../features/userSlice";
+import { addUser, IUser } from "../../../store/slice/userSlice.ts";
 
 const CreateUserForm = () => {
 	const [userName, setUserName] = useState<string>("");

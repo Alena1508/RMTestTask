@@ -2,8 +2,8 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import TodoList from "./features/TodoList";
-import { persistor, store } from "./store";
+import TodoList from "./components/toDoList/TodoList.tsx";
+import { persistor, store } from "./store/store.ts";
 import "./App.scss";
 
 const App = () => {

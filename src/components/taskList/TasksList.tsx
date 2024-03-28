@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
-import TaskColumn from "../taskColumn/TaskColumn";
-import { usersSelector } from "../../features/selectors";
+import UserColumn from "../userColumn/UserColumn.tsx";
+import { usersSelector } from "../../store/selectors";
 import "./TasksList.scss";
 
 const TasksList = () => {
@@ -9,7 +9,7 @@ const TasksList = () => {
 	return (
 		<div className="tasksList">
 			{users.map((user) => (
-				<TaskColumn key={user.id} id={user.id} />
+				<UserColumn key={user.id} id={user.id} />
 			))}
 		</div>
 	);

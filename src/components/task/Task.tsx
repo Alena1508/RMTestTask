@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useDispatch } from "react-redux";
 import { useDrag, useDrop } from "react-dnd";
-import { reorderTask } from "../../features/taskSlice";
+import { reorderTask } from "../../store/slice/taskSlice.ts";
 import "./Task.scss";
 
 interface ITaskItem {
@@ -25,6 +25,7 @@ const Task = ({
 }: ITaskItem) => {
 	const dispatch = useDispatch();
 	const ref = useRef<HTMLDivElement>(null);
+
 	const [{ isDragging }, drag] = useDrag(
 		() => ({
 			type: "task",

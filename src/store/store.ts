@@ -2,9 +2,9 @@ import { configureStore } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
 import storage from "redux-persist/lib/storage";
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist";
-import todoReducer from "./features/taskSlice";
-import userReducer from "./features/userSlice";
-import filterReducer from "./features/filterSlice";
+import todoReducer from "./slice/taskSlice.ts";
+import userReducer from "./slice/userSlice.ts";
+import filterReducer from "./slice/filterSlice.ts";
 
 const reducers = combineReducers({
 	todos: todoReducer,

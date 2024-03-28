@@ -1,8 +1,8 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
-import { addTask, ITask } from "../../features/taskSlice";
-import { usersSelector } from "../../features/selectors";
+import { addTask, ITask } from "../../../store/slice/taskSlice.ts";
+import { usersSelector } from "../../../store/selectors.ts";
 
 const CreateTaskForm = () => {
 	const [taskName, setTaskName] = useState<string>("");
@@ -11,13 +11,6 @@ const CreateTaskForm = () => {
 	const isDisabledBtn = taskName === "";
 
 	const dispatch = useDispatch();
-
-	const task: ITask = {
-		id: uuidv4(),
-		name: taskName,
-		completed: false,
-		userId: selectedUserId,
-	};
 
 	const handleTaskNameChange = (e: ChangeEvent<HTMLInputElement>) => {
 		setTaskName(e.target.value);
@@ -30,6 +23,12 @@ const CreateTaskForm = () => {
 	const handleSubmit = (e: FormEvent) => {
 		e.preventDefault();
 
+		const task: ITask = {
+			id: uuidv4(),
+			name: taskName,
+			completed: false,
+			userId: selectedUserId,
+		};
 		dispatch(addTask(task));
 		setTaskName("");
 	};

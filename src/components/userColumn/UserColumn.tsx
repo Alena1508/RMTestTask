@@ -2,13 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useDrag, useDrop } from "react-dnd";
 
-import { getTasksByUserId, getUserNameByUserId } from "../../features/selectors";
-import { deleteTask, moveTaskToUser, toggleComplete } from "../../features/taskSlice";
-import { changeUserOrder, deleteUser } from "../../features/userSlice";
-import Task from "../task/Task";
-import "./TaskColumn.scss";
+import { getTasksByUserId, getUserNameByUserId } from "../../store/selectors";
+import { deleteTask, moveTaskToUser, toggleComplete } from "../../store/slice/taskSlice.ts";
+import { changeUserOrder, deleteUser } from "../../store/slice/userSlice.ts";
+import Task from "../task/Task.tsx";
+import "./UserColumn.scss";
 
-interface ITaskColumn {
+interface IUserColumn {
 	id: string;
 }
 
@@ -17,48 +17,27 @@ interface IDragItem {
 	type: string;
 }
 
-const TaskColumn = ({ id }: ITaskColumn) => {
+const UserColumn = ({ id }: IUserColumn) => {
+	const dispatch = useDispatch();
 	const ref = useRef<HTMLDivElement>(null);
-	const [selectedTasks, setSelectedTasks] = useState<string[]>([]);
-	const [toggleCompletedFlag, setToggleCompletedFlag] = useState<boolean>(true);
+
 	const userTasks = useSelector(getTasksByUserId(id));
 	const userName = useSelector(getUserNameByUserId(id));
+
+	const [selectedTasks, setSelectedTasks] = useState<string[]>([]);
+	const [toggleCompletedFlag, setToggleCompletedFlag] = useState<boolean>(true);
+
+	const usersTasksIds = userTasks.map((task) => task.id);
+	const actualSelectedIds = selectedTasks.filter((id) => usersTasksIds.includes(id));
+	const isActionButtonDisabled = !actualSelectedIds.length;
 	const hasUserTasks = userTasks.length !== 0;
-	const isSelectedAllTasks = hasUserTasks && selectedTasks.length === userTasks.length;
-	const dispatch = useDispatch();
-	const isActionButtonDisabled = !selectedTasks.length;
+	const isSelectedAllTasks = hasUserTasks && actualSelectedIds.length === userTasks.length;
 
 	useEffect(() => {
-		const usersTasksIds = userTasks.map((task) => task.id);
-		if (selectedTasks.length > usersTasksIds.length) {
-			setSelectedTasks(usersTasksIds);
-		}
-	}, [selectedTasks.length, userTasks]);
-
-	const handleAllTasks = (isChecked: boolean) => {
-		setSelectedTasks(isChecked ? userTasks.map((t) => t.id) : []);
-	};
-
-	const handleSelectTask = (isChecked: boolean, checkedId: string) => {
-		const tasks = isChecked ? selectedTasks.filter((id) => id !== checkedId) : [...selectedTasks, checkedId];
-		setSelectedTasks(tasks);
-	};
-
-	const handleToggleComplete = (isCompleted: boolean, tasksIds: string[]) => {
-		const payload = {
-			ids: tasksIds,
-			completed: toggleCompletedFlag,
-		};
-		dispatch(toggleComplete(payload));
-		setToggleCompletedFlag(!isCompleted);
-	};
-
-	const handleDeleteTask = (tasksIds: string[]) => {
-		dispatch(deleteTask(tasksIds));
-	};
-	const handleDeleteUser = () => {
-		dispatch(deleteUser(id));
-	};
+		// update selected ids when task moved or deleted
+		if (actualSelectedIds.length < selectedTasks.length)
+			setSelectedTasks(selectedTasks.filter((id) => usersTasksIds.includes(id)));
+	}, [userTasks.length]);
 
 	const [{ isDragging }, drag] = useDrag(
 		() => ({
@@ -77,7 +56,7 @@ const TaskColumn = ({ id }: ITaskColumn) => {
 				if (type === "user") {
 					return handleChangeUserOrder(dragId, id);
 				}
-				return addTaskToUserColumn(dragId);
+				return handleAddTaskToUserColumn(dragId);
 			},
 			collect: (monitor) => ({
 				isOver: monitor.isOver(),
@@ -86,20 +65,44 @@ const TaskColumn = ({ id }: ITaskColumn) => {
 		}),
 		[],
 	);
-	const addTaskToUserColumn = (dragId: string) => {
+	const handleAllTasks = (isChecked: boolean) => {
+		setSelectedTasks(isChecked ? userTasks.map((t) => t.id) : []);
+	};
+
+	const handleSelectTask = (isChecked: boolean, checkedId: string) => {
+		const tasks = isChecked ? selectedTasks.filter((id) => id !== checkedId) : [...selectedTasks, checkedId];
+		setSelectedTasks(tasks);
+	};
+
+	const handleToggleComplete = (isCompleted: boolean, tasksIds: string[]) => {
+		const payload = {
+			ids: tasksIds,
+			completed: toggleCompletedFlag,
+		};
+		dispatch(toggleComplete(payload));
+		setToggleCompletedFlag(!isCompleted);
+	};
+	const handleDeleteTask = (tasksIds: string[]) => {
+		dispatch(deleteTask(tasksIds));
+	};
+	const handleDeleteUser = () => {
+		dispatch(deleteUser(id));
+	};
+	const handleAddTaskToUserColumn = (dragId: string) => {
 		dispatch(moveTaskToUser({ dragId, userId: id }));
+		// setSelectedTasks(selectedTasks.filter((id) => id !== dragId));
 	};
 	const handleChangeUserOrder = (dragId: string, dropId: string) => {
 		dispatch(changeUserOrder({ dragId, dropId }));
 	};
-
 	const opacity = isDragging ? 0.5 : 1;
+
 	drag(drop(ref));
 	return (
-		<div className="taskColumn" ref={ref} style={{ opacity }}>
-			<div className="taskColumnHeader">
+		<div className="userColumn" ref={ref} style={{ opacity }}>
+			<div className="userColumnHeader">
 				<h2>{userName}</h2>
-				<button className="taskColumnBtn" onClick={handleDeleteUser}>
+				<button className="userColumnBtn" onClick={handleDeleteUser}>
 					X
 				</button>
 			</div>
@@ -113,7 +116,7 @@ const TaskColumn = ({ id }: ITaskColumn) => {
 					/>
 					Select all
 				</label>
-				<div className="taskColumnActions">
+				<div className="userColumnActions">
 					<button onClick={() => handleDeleteTask(selectedTasks)} disabled={isActionButtonDisabled}>
 						Delete selected
 					</button>
@@ -147,4 +150,4 @@ const TaskColumn = ({ id }: ITaskColumn) => {
 	);
 };
 
-export default TaskColumn;
+export default UserColumn;

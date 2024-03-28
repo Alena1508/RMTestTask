@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export const TasksFilters = {
 	SHOW_ALL: "All",
 	SHOW_COMPLETED: "Completed",
-	SHOW_ACTIVE: "Active",
+	SHOW_UNCOMPLETED: "Uncompleted",
 };
 
 interface FilterStore {
