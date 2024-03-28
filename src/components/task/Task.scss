@@ -1,0 +1,32 @@
+@import "../../variables";
+
+.task {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-bottom: $width-input-border solid $textfld-border;
+	cursor: grab;
+
+	&:last-child {
+		border-bottom: none;
+	}
+
+	.taskName {
+		max-width: 50px;
+		margin-left: 0.5em;
+	}
+
+	.taskBtn {
+		background: #ffffff;
+		color: #1f2937;
+		height: 25px;
+		padding: 0 0.3em;
+	}
+
+	.taskActions {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1em;
+	}
+}
